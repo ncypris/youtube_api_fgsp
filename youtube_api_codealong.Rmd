@@ -14,6 +14,12 @@ library(tuber)
 source(file = "keys/auth.R")
 ```
 
+```{r}
+yt_oauth(app_id =,
+        app_secret = )
+```
+
+
 # Video Information
 
 ```{r}
@@ -23,20 +29,18 @@ video_id <- "pBk4NYhWNMM"
 ## Statistics
 
 ```{r}
-video_stats <- get_stats(video_id=video_id)
+
 ```
 
 ```{r}
-video_stats %>% 
-  as_tibble() %>% 
-  type_convert()
+
 ```
 
 
 ## Information about the Video
 
 ```{r}
-video_details <- get_video_details(video_id=video_id)
+
 ```
 
 # Comments
@@ -46,14 +50,14 @@ The 100 most recent comments - can be changed with the argument max_results (>= 
 Does not collect replies.
 
 ```{r}
-comment_threads <- get_comment_threads(c(video_id = video_id))
+
 ```
 
 get_all_comments():
 All comments and the first five replies to each comment.
 
 ```{r}
-all_comments <- get_all_comments(video_id = video_id)
+
 ```
 
 # Exercise 1
