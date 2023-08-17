@@ -1,0 +1,158 @@
+---
+title: 'Text Analysis: Frequencies'
+author: "Niklas Cypris"
+date: "`r Sys.Date()`"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+library(tidyverse)
+library(quanteda)
+library(quanteda.textplots)
+
+theme_set(theme_classic())
+```
+
+```{r, warning=FALSE}
+load("data/vid1.Rda")
+load("data/vid2.Rda")
+```
+
+# Possible Analyses
+
+# Meta Data
+
+## Time of Publishing
+
+```{r}
+
+```
+
+## Comments per User
+
+```{r}
+
+```
+
+## Likes for Comments
+
+```{r}
+
+```
+
+```{r}
+
+```
+
+## Replies to Posts
+
+```{r}
+
+```
+
+# Exercise
+
+Check out the meta data for the comments to the Oppenheimer movie.
+
+# Textual Anaylsis
+
+## Frequently-used Words
+
+```{r}
+
+```
+
+```{r}
+
+```
+
+```{r}
+
+```
+
+*Remove special characters, keep emojis, and remove single letters:*
+
+```{r}
+pattern_to_remove <- "[^a-zA-Z0-9\\s\\x{1F600}-\\x{1F64F}\\x{1F300}-\\x{1F5FF}\\x{1F680}-\\x{1F6FF}\\x{1F700}-\\x{1F77F}\\x{1F780}-\\x{1F7FF}\\x{1F800}-\\x{1F8FF}\\x{1F900}-\\x{1F9FF}\\x{1FA00}-\\x{1FA6F}\\x{1FA70}-\\x{1FAFF}]|\\b[a-zA-Z]\\b"
+```
+
+**Special Letters**
+
+The pattern "[^a-zA-Z0-9\\s]" matches any character that's not:
+a lowercase letter (a-z)
+an uppercase letter (A-Z)
+a number (0-9)
+or a whitespace (\\s)
+
+**Emojis**
+
+\x{1F600}-\x{1F64F} represents the range of emojis in the "emoticons" block of Unicode.
+
+The other \x{...} ranges represent other blocks of emojis in the Unicode standard.
+
+**Single Letters**
+
+\\b[a-zA-Z]\\b matches single letters. Here, \\b is a word boundary anchor ensuring that it matches a single letter as a whole word.
+
+```{r}
+
+```
+
+```{r}
+
+```
+
+```{r}
+
+```
+
+```{r}
+
+```
+
+```{r}
+
+```
+
+```{r}
+
+```
+
+```{r}
+
+```
+
+```{r}
+
+```
+
+```{r}
+
+```
+
+## Wordcloud
+
+```{r}
+
+```
+
+# Exercise
+
+Apply the above-mentioned steps for the Oppenheimer movie data set. Which words are the most prominent words? Is there any overlap between movies? How about overlap in the 2grams?
+
+
+# Further Reading
+
+https://tutorials.quanteda.io/
+
+
+
+
+
+
+
+
+
+
+
+
