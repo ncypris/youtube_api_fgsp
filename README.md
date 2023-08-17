@@ -8,7 +8,7 @@ Contains slides and 'tuber' documentation
 
 Code to access the youtube api
 
-## Text Analysis
+## Text Analysis Rmds
 
 Code to conduct simple analyses on the data
 
