@@ -1,5 +1,5 @@
 ---
-title: 'Youtube API: All'
+title: 'Text Analysis: Frequencies'
 author: "Niklas Cypris"
 date: "`r Sys.Date()`"
 output: html_document
@@ -8,6 +8,8 @@ output: html_document
 ```{r setup, include=FALSE}
 library(tidyverse)
 library(quanteda)
+library(quanteda.textplots)
+
 theme_set(theme_classic())
 ```
 
@@ -16,11 +18,11 @@ load("data/vid1.Rda")
 load("data/vid2.Rda")
 ```
 
-# Analyses
+# Possible Analyses
 
-## Meta Data
+# Meta Data
 
-### Time of Publishing
+## Time of Publishing
 
 ```{r}
 barbie_comments %>% 
@@ -28,14 +30,14 @@ barbie_comments %>%
   geom_histogram(bins = 90)
 ```
 
-### Comments per User
+## Comments per User
 
 ```{r}
 barbie_comments %>% 
   count(authorDisplayName, sort = TRUE)
 ```
 
-### Likes for Comments
+## Likes for Comments
 
 ```{r}
 barbie_comments %>% 
@@ -49,7 +51,7 @@ barbie_comments %>%
   table()
 ```
 
-### Replies to Posts
+## Replies to Posts
 
 ```{r}
 barbie_comments %>% 
@@ -60,11 +62,51 @@ barbie_comments %>%
   right_join(barbie_comments, by = join_by(id))
 ```
 
-## Textual Anaylsis
+# Exercise
 
-### Bag-of-Words Analyses
+Check out the meta data for the comments to the Oppenheimer movie.
 
-### Frequently-used Words
+```{r}
+oppenheimer_comments %>% 
+  ggplot(aes(x = publishedAt))+
+  geom_histogram(bins = 90)
+```
+
+### Comments per User
+
+```{r}
+oppenheimer_comments %>% 
+  count(authorDisplayName, sort = TRUE)
+```
+
+### Likes for Comments
+
+```{r}
+oppenheimer_comments %>% 
+  ggplot(aes(x = likeCount))+
+  geom_histogram()
+```
+
+```{r}
+oppenheimer_comments %>% 
+  pull(likeCount) %>% 
+  table()
+```
+
+### Replies to Posts
+
+```{r}
+oppenheimer_comments %>%  
+  filter(!is.na(parentId)) %>% 
+  count(parentId) %>% 
+  rename(id = parentId,
+         n_replies = n) %>% 
+  right_join(oppenheimer_comments, by = join_by(id))
+```
+
+# Textual Anaylsis
+
+## Frequently-used Words
 
 ```{r}
 corp_barbie <- corpus(barbie_comments, text_field = "textDisplay")
@@ -83,6 +125,10 @@ toks_barbie <- corp_barbie %>%
 ```
 
 *Remove special characters, keep emojis, and remove single letters:*
+
+```{r}
+pattern_to_remove <- "[^a-zA-Z0-9\\s\\x{1F600}-\\x{1F64F}\\x{1F300}-\\x{1F5FF}\\x{1F680}-\\x{1F6FF}\\x{1F700}-\\x{1F77F}\\x{1F780}-\\x{1F7FF}\\x{1F800}-\\x{1F8FF}\\x{1F900}-\\x{1F9FF}\\x{1FA00}-\\x{1FA6F}\\x{1FA70}-\\x{1FAFF}]|\\b[a-zA-Z]\\b"
+```
 
 **Special Letters**
 
@@ -103,13 +149,9 @@ The other \x{...} ranges represent other blocks of emojis in the Unicode standar
 \\b[a-zA-Z]\\b matches single letters. Here, \\b is a word boundary anchor ensuring that it matches a single letter as a whole word.
 
 ```{r}
-pattern_to_remove <- "[^a-zA-Z0-9\\s\\x{1F600}-\\x{1F64F}\\x{1F300}-\\x{1F5FF}\\x{1F680}-\\x{1F6FF}\\x{1F700}-\\x{1F77F}\\x{1F780}-\\x{1F7FF}\\x{1F800}-\\x{1F8FF}\\x{1F900}-\\x{1F9FF}\\x{1FA00}-\\x{1FA6F}\\x{1FA70}-\\x{1FAFF}]|\\b[a-zA-Z]\\b"
-```
-
-```{r}
 toks_barbie <- toks_barbie %>% 
   tokens_remove(pattern = pattern_to_remove, valuetype = "regex") %>% 
-  tokens_remove(pattern = c("href", "quot", "amp")) # removing other unnecessary words
+  tokens_remove(pattern = c("href", "quot", "amp", "br")) # removing other unnecessary words
 ```
 
 ```{r}
@@ -139,9 +181,23 @@ print(dfm_barbie)
 topfeatures(dfm_barbie, 30)
 ```
 
+```{r}
+topfeatures(dfm_2gram_barbie, 30)
+```
+
+```{r}
+topfeatures(dfm_3gram_barbie, 30)
+```
+
+## Wordcloud
+
+```{r}
+textplot_wordcloud(dfm_barbie, max_words = 200)
+```
+
 # Exercise
 
-Do the above-mentioned steps for the Oppenheimer movie. Which words are the most prominent words there?
+Apply the above-mentioned steps for the Oppenheimer movie data set. Which words are the most prominent words? Is there any overlap between movies? How about overlap in the 2grams?
 
 ```{r}
 corp_opp <- corpus(oppenheimer_comments, text_field = "textDisplay")
@@ -162,7 +218,7 @@ toks_opp <- corp_opp %>%
 ```{r}
 toks_opp <- toks_opp %>% 
   tokens_remove(pattern = pattern_to_remove, valuetype = "regex") %>% 
-  tokens_remove(pattern = c("href", "quot", "amp")) # removing other unnecessary words
+  tokens_remove(pattern = c("href", "quot", "amp", "br")) # removing other unnecessary words
 ```
 
 ```{r}
@@ -192,6 +248,19 @@ print(dfm_opp)
 topfeatures(dfm_opp, 30)
 ```
 
+```{r}
+topfeatures(dfm_2gram_opp, 30)
+```
+
+```{r}
+topfeatures(dfm_3gram_opp, 30)
+```
+
+### Wordcloud
+
+```{r}
+textplot_wordcloud(dfm_opp, max_words = 200)
+```
 
 # Further Reading
 
