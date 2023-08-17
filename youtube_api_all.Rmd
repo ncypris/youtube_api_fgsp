@@ -1,0 +1,125 @@
+---
+title: 'Youtube API: All'
+author: "Niklas Cypris"
+date: "`r Sys.Date()`"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+library(tidyverse)
+library(tuber)
+```
+
+```{r, warning=FALSE}
+source(file = "keys/auth.R")
+```
+
+# Video Information
+
+```{r}
+video_id <- ""
+```
+
+uYPbbksJxIg
+
+pBk4NYhWNMM
+
+## Statistics
+
+```{r}
+video_stats <- get_stats(video_id=video_id)
+```
+
+```{r}
+video_stats %>% 
+  as_tibble() %>% 
+  type_convert()
+```
+
+
+## Information about the Video
+
+```{r}
+video_details <- get_video_details(video_id=video_id)
+```
+
+## Video Captions
+
+```{r}
+list_caption_tracks(
+  part = "snippet",
+  video_id = video_id)
+```
+
+```{r}
+get_captions(id = "AUieDaZMZMD-xxuupVUD1Iaq2SCkFI3V6e2gW4WMYhpbOCDyG9k")
+```
+
+# Comments
+
+```{r}
+comment_threads <- get_comment_threads(c(video_id = video_id))
+```
+
+There are two tuber functions for collecting viewer comments for specific videos (both return a dataframe by default):
+
+    get_comment_threads() collects comments for a video. By default, it collects the 100 most recent comments. The number of comments can be changed with the argument max_results (needs to be >= 20).
+
+NB: If the number is > 100, the function should fetch all results (see ?get_comment_threads). However, the function has a bug, so that the resulting dataframe only contains repetitions of the 100 most recent comments when max_results > 100. Also, this function does not collect replies to comments. 
+
+```{r}
+all_comments <- get_all_comments(video_id = video_id)
+```
+
+
+    get_all_comments() collects all comments for a video, including replies to comments.
+
+NB: This function only collects up to 5 replies per comment (the related issue in the tuber GitHub repo is still open). Depending on the number of comments for a video, running this function can take some time and might also deplete your API quota limit (more on that later).
+
+
+```{r}
+video_ids <- 
+```
+
+```{r}
+multiple_vid_comments <- map_df(video_ids, get_all_comments)
+```
+
+
+# Other Stuff
+
+Video search by keywords
+
+All get commands:
+
+1. Video
+get_captions
+get_stats
+get_video_details
+get_related_videos
+
+2. Channel
+get_all_channel_video_stats
+get_channel_stats
+get_subscriptions
+
+3. Comments
+get_all_comments
+get_comments
+get_comment_threads
+
+4. Playlists
+get_playlists
+get_playlist_items
+
+
+
+
+
+
+
+
+
+
+
+
